@@ -1,0 +1,75 @@
+# Pixi configuration for strict Mojo development
+# This file defines project metadata, dependencies, and build tasks
+# Documentation: https://pixi.sh/
+
+[workspace]
+# Update these values for your project:
+authors = ["Your Name <your.email@example.com>"]
+name = "your-project-name"
+version = "0.1.0"
+
+# Package sources - DO NOT MODIFY
+# - conda.modular.com/max-nightly: Official Mojo/MAX packages
+# - conda-forge: Community packages for Python and tools
+channels = ["https://conda.modular.com/max-nightly", "conda-forge"]
+
+# Note: Address sanitizer only works on Linux, thread sanitizer works on all
+platforms = ["osx-arm64", "linux-64", "linux-aarch64"]
+
+[dependencies]
+# Mojo compiler - using 25.4.* for stability while allowing patch updates
+modular = "25.4.*"
+
+# Python interpreter for interop - 3.13+ for maximum type safety
+# Python 3.13 includes: TypeIs, ReadOnly, default TypeVars, better error messages
+# Using specific version (not >=) for reproducible strict builds
+python = "3.13.*"
+
+# pip for installing Python packages
+pip = "*"
+
+[pypi-dependencies]
+# Add your Python dependencies here
+# These will be available for import in Mojo via Python.import_module()
+# Example: numpy = "*"
+# Example: pandas = ">=2.0"
+
+[tasks]
+# Build tasks with strict enforcement - DO NOT MODIFY these flags
+# Each task runs two steps:
+# 1. Auto-format all code with `mojo format --quiet .`
+# 2. Compile with strict-mojo.sh wrapper that treats ALL warnings as errors
+
+# Compiler flags explained:
+# -g                              : Include debug symbols for better error messages
+# --diagnose-missing-doc-strings  : Require documentation for all public functions
+# --validate-doc-strings          : Validate docstring format (Args/Returns sections)
+# --max-notes-per-diagnostic 50   : Show detailed context for errors
+# --sanitize thread               : Enable ThreadSanitizer for race condition detection
+#                                   (Address sanitizer not used due to macOS ARM64 issues)
+
+build = "mojo format --quiet . && ./strict-mojo.sh build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread"
+run = "mojo format --quiet . && ./strict-mojo.sh run -g --diagnose-missing-doc-strings --validate-doc-strings --sanitize thread"
+test = "mojo format --quiet . && ./strict-mojo.sh test -g --diagnose-missing-doc-strings --validate-doc-strings --sanitize thread"
+
+[environments]
+# Default environment configuration
+default = { features = [], solve-group = "default" }
+
+[activation]
+# Environment variables set when entering the pixi environment
+# These ensure maximum strictness at runtime
+
+[activation.env]
+# Treat all Python interop warnings as errors (no silent failures)
+MOJO_PYTHON_INTEROP_WARNINGS = "error"
+
+# Enable runtime assertions for debug_assert() statements
+MOJO_ENABLE_ASSERTIONS = "1"
+
+# Additional strict runtime checks
+MOJO_ASSERT_ON_ERROR = "1"
+
+# Keep optimizations enabled to catch more potential issues
+# (Some bugs only appear with optimizations on)
+MOJO_DISABLE_OPTIMIZATIONS = "0"

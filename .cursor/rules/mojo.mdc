@@ -1,0 +1,165 @@
+---
+description: Enforces strict Mojo coding standards with zero-tolerance for warnings, mandatory documentation
+globs: **/*.mojo
+---
+# Strict Mojo Development Guide
+
+This document enforces the strictest possible Mojo development practices with zero-tolerance for warnings and mandatory documentation for all code.
+
+## 🚨 CRITICAL: Strict Requirements
+
+### Zero-Tolerance Build System
+
+- **NEVER** call `mojo` directly - ALWAYS use `pixi run` commands
+- ALL warnings are treated as errors via `strict-mojo.sh` wrapper
+- No warning suppression mechanisms exist in Mojo - fix all issues
+- The build will fail on ANY diagnostic: warnings, notes, deprecations
+
+### Mandatory Commands
+
+```bash
+pixi run build <file.mojo> -o <output>  # Compile with strict checks
+pixi run run <file.mojo>                # Run with strict checks  
+pixi run test                           # Run tests with strict checks
+```
+
+### Required Documentation
+
+Every function MUST have a properly formatted docstring:
+
+```mojo
+fn function_name(param1: Type, param2: Type) -> ReturnType:
+    """Brief description of what the function does.
+    
+    Args:
+        param1: Description of first parameter.
+        param2: Description of second parameter.
+        
+    Returns:
+        Description of what is returned.
+    """
+    # Implementation
+```
+
+## Language Features & Best Practices
+
+### 1. Type Safety
+
+- Use explicit types for all function parameters and returns
+- Leverage Mojo's strict type system to catch errors at compile time
+- Prefer specific types over generic ones when possible
+
+### 2. Python Interoperability
+
+```mojo
+# Import Python modules after adding to pixi.toml [pypi-dependencies]
+var np = Python.import_module("numpy")
+var pd = Python.import_module("pandas")
+var plt = Python.import_module("matplotlib.pyplot")
+
+# Use Python objects seamlessly
+var array = np.array([1, 2, 3])
+var df = pd.DataFrame({"col": [1, 2, 3]})
+```
+
+### 3. Variable Usage
+
+```mojo
+# ✅ CORRECT: Use underscore for intentionally unused values
+var _ = some_function()  # Return value ignored
+
+# ❌ WRONG: Will fail compilation with "assignment was never used"
+var unused = some_function()
+```
+
+### 4. Memory Management
+
+- Mojo handles memory automatically in most cases
+- Use RAII patterns - resources are tied to object lifetime
+- Prefer stack allocation over heap when possible
+
+### 5. Error Handling
+
+- Use Mojo's Result type for recoverable errors
+- Use assertions for invariants that must hold
+- All errors must be handled - no silent failures
+
+## Common Compilation Errors
+
+| Error | Solution |
+|-------|----------|
+| "missing a doc string" | Add complete docstring with Args/Returns sections |
+| "assignment was never used" | Change to `var _ =` or remove the variable |
+| "unknown argument in doc string" | Fix docstring formatting - check for extra blank lines |
+| "deprecated" | Update to use non-deprecated APIs |
+| Thread sanitizer warnings | Fix race conditions in concurrent code |
+
+## Build Pipeline Details
+
+1. `pixi run build/run/test` executes the task from `pixi.toml`
+2. Auto-formats all code: `mojo format --quiet .`
+3. Invokes `strict-mojo.sh` with these flags:
+   - `-g`: Debug symbols for better error messages
+   - `--diagnose-missing-doc-strings`: Enforce documentation
+   - `--validate-doc-strings`: Validate format
+   - `--max-notes-per-diagnostic 50`: Full error context
+   - `--sanitize thread`: Detect race conditions
+
+## Environment Configuration
+
+These environment variables are set automatically via pixi:
+
+- `MOJO_PYTHON_INTEROP_WARNINGS="error"`: Python warnings become errors
+- `MOJO_ENABLE_ASSERTIONS="1"`: Runtime assertions enabled
+- `MOJO_ASSERT_ON_ERROR="1"`: Assert on errors
+- `MOJO_DISABLE_OPTIMIZATIONS="0"`: Keep optimizations to catch more issues
+
+## Working with Python Dependencies
+
+1. Add to `pixi.toml` under `[pypi-dependencies]`:
+
+   ```toml
+   [pypi-dependencies]
+   numpy = "*"
+   pandas = ">=2.0"
+   scikit-learn = "*"
+   ```
+
+2. Install: `pixi install`
+
+3. Import in Mojo:
+
+   ```mojo
+   var sklearn = Python.import_module("sklearn")
+   ```
+
+## Testing Requirements
+
+- All code must have tests
+- Tests must pass before committing
+- Use Mojo's `testing` module for unit tests
+- Test files go in `tests/` directory
+
+## File Organization
+
+```text
+project_root/
+├── src/           # Mojo source files
+├── tests/         # Test files
+├── pixi.toml      # Project configuration
+├── strict-mojo.sh # Build wrapper (DO NOT MODIFY)
+└── CLAUDE.md      # AI assistant instructions
+```
+
+## Performance Considerations
+
+- Mojo compiles to native code - write clear code first, optimize later
+- Use built-in types when possible for best performance
+- Profile before optimizing - Mojo is often fast by default
+
+## Remember
+
+1. **Every warning is an error** - no exceptions
+2. **Every function needs documentation** - no exceptions  
+3. **Always use pixi run commands** - never call mojo directly
+4. **Fix the root cause** - no workarounds or suppressions

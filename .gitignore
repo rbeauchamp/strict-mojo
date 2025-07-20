@@ -1,0 +1,53 @@
+# Mojo
+*.mojopkg
+__pycache__/
+
+# Compiled binaries (no extension on Unix)
+# Add specific binary names here as needed
+/main
+/test
+/app
+
+# Build artifacts
+build/
+dist/
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+
+# Debug files
+*.dSYM/
+*.pdb
+
+# Pixi
+.pixi/
+pixi.lock
+
+# Python
+*.py[cod]
+*$py.class
+.Python
+*.egg-info/
+.eggs/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.coverage
+.pytest_cache/
+htmlcov/
+
+# Documentation
+docs/_build/
+*.log

@@ -16,7 +16,7 @@ A comprehensive GitHub template for creating professional Mojo projects with **s
 - ⚡ **Performance Benchmarking** - Included benchmark framework
 - 🐛 **Runtime Safety** - Thread sanitizer and debug assertions enabled
 - 📦 **Modern Package Management** - Uses Pixi for dependency management
-- 🤖 **CI/CD Ready** - GitHub Actions workflow included
+- 🤖 **AI Assistant Ready** - Pre-configured for Claude and Gemini AI assistants
 
 ## 🚀 Quick Start
 
@@ -59,7 +59,7 @@ pixi run test
    mv src/package_name src/your_package_name
    ```
 
-3. **Update imports** in files to use your package name
+3. **Update imports** in all files to use your package name
 
 4. **Add your code** following the strict standards
 
@@ -83,16 +83,20 @@ your-mojo-project/
 │   └── core_performance.mojo
 ├── docs/                         # 📄 Documentation
 │   └── README.md
+├── build/                        # 🏗️ Build artifacts (auto-generated)
 ├── .github/                      # 🤖 GitHub configuration
 │   ├── workflows/ci.yml          # CI/CD pipeline
 │   ├── ISSUE_TEMPLATE/           # Issue templates
 │   └── PULL_REQUEST_TEMPLATE.md
 ├── pixi.toml                     # 📦 Project configuration
 ├── tasks.sh                      # 🛠️ Build automation
+├── CLAUDE.md                     # 🤖 Claude AI assistant config
+├── GEMINI.md                     # 🤖 Gemini AI assistant config
 ├── .gitignore                    # 🚫 Git ignore rules
 ├── LICENSE                       # ⚖️ License file
 ├── README.md                     # 📋 This file
-└── CONTRIBUTING.md               # 🤝 Contribution guide
+├── CONTRIBUTING.md               # 🤝 Contribution guide
+└── CONTRIBUTING.md.template      # 📝 Template for your project
 ```
 
 ## 🛠️ Development Commands
@@ -102,25 +106,29 @@ All commands use strict compilation settings with zero tolerance for warnings:
 ### Building
 
 ```bash
-# Build entire project
+# Build entire project (all directories)
 pixi run build
 
 # Build specific file  
 pixi run build src/package_name/core.mojo
 
-# Build executable
-pixi run build bin/hello.mojo -o build/hello
+# Build with custom output
+pixi run build bin/hello.mojo -o build/my_app
 ```
+
+**Note**: The build system automatically:
+- Formats code before building
+- Adds import paths for cross-directory imports
+- Detects file types (executable vs library module)
 
 ### Running
 
 ```bash
-# Run source file directly
+# Run any .mojo file (auto-builds first)
 pixi run run examples/basic_usage.mojo
 
-# Run pre-built executable
-pixi run build bin/hello.mojo -o build/hello
-./build/hello
+# Run with arguments
+pixi run run bin/hello.mojo Alice Bob
 ```
 
 ### Testing
@@ -130,20 +138,17 @@ pixi run build bin/hello.mojo -o build/hello
 pixi run test
 
 # Run specific test file
-pixi run test test/test_core.mojo
+pixi run test tests/test_core.mojo
 ```
 
-### Code Quality
+### Maintenance
 
 ```bash
-# Format code (automatic before builds)
-pixi run format
-
-# Check formatting
-pixi run format-check
-
-# Clean build artifacts
+# Clean all build artifacts
 pixi run clean
+
+# Clean including pixi cache
+pixi run clean --cache
 ```
 
 ## 📋 Strict Requirements
@@ -188,22 +193,37 @@ fn good_example():
     print("Hello")
 ```
 
-### 3. **Comprehensive Testing**
+### 3. **Modern Mojo Syntax**
 
-Every public function must have tests covering normal cases, edge cases, and errors:
+Use current Mojo conventions:
 
 ```mojo
-def test_calculate_area():
+struct MyStruct:
+    fn __init__(out self: MyStruct):  # Constructors use 'out self'
+        pass
+    
+    fn mutate(mut self: MyStruct):    # Mutating methods use 'mut self'
+        pass
+    
+    fn read(self: MyStruct) -> Int:   # Read-only methods use 'self'
+        return 42
+```
+
+### 4. **Comprehensive Testing**
+
+Every public function must have tests:
+
+```mojo
+fn test_calculate_area():
     """Test area calculation with various inputs."""
     assert_equal(calculate_area(5.0, 3.0), 15.0)
     assert_equal(calculate_area(0.0, 10.0), 0.0)
     assert_equal(calculate_area(2.5, 4.0), 10.0)
 ```
 
-### 4. **Runtime Safety**
+### 5. **Runtime Safety**
 
 All builds include:
-
 - Thread sanitizer for concurrency bugs
 - Debug assertions for runtime checks  
 - Maximum diagnostic output for debugging
@@ -227,13 +247,17 @@ Then run:
 pixi install
 ```
 
-### Adding Mojo Libraries
+### AI Assistant Configuration
 
-When Mojo package management becomes available, you'll be able to add Mojo dependencies. For now, vendor any external Mojo code in your `src/` directory.
+This template includes configuration files for AI coding assistants:
+- **CLAUDE.md** - Instructions for Claude (claude.ai)
+- **GEMINI.md** - Instructions for Gemini
+
+These ensure AI assistants understand the strict requirements and project structure.
 
 ### Project-Specific Configuration
 
-Customize the build process by modifying `tasks.sh`. The current implementation provides strict compilation, but you can adjust compiler flags as needed.
+Customize the build process by modifying `tasks.sh`. The current implementation provides strict compilation with automatic import path management.
 
 ## 🤝 Contributing
 
@@ -245,6 +269,8 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
 - Pull request process
 - Community guidelines
 
+For your own projects, use [CONTRIBUTING.md.template](CONTRIBUTING.md.template) as a starting point.
+
 ## 📚 Examples
 
 The template includes working examples:
@@ -254,11 +280,16 @@ The template includes working examples:
 - **`benchmarks/core_performance.mojo`** - Performance measurement
 - **Test files** - Comprehensive test coverage examples
 
-Run them with:
+Run examples directly:
 
 ```bash
-pixi run build examples/basic_usage.mojo -o build/example
-./build/example
+# Examples and benchmarks run as executables
+pixi run run examples/basic_usage.mojo
+pixi run run benchmarks/core_performance.mojo
+
+# Or build first
+pixi run build examples/basic_usage.mojo
+./build/basic_usage
 ```
 
 ## 🎯 Use Cases
@@ -294,4 +325,4 @@ Projects created from this template can use any license you choose.
 ---
 
 **Ready to build something amazing with Mojo?** 🔥  
-[Use this template](https://github.com/rbeauchamp/strict-mojo/generate) to get started!
+Use this template to get started!

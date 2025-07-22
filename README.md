@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Unlicense-blue.svg)](LICENSE)
 [![Mojo](https://img.shields.io/badge/Mojo-25.4-orange.svg)](https://docs.modular.com/mojo/)
+![CodeQL](https://github.com/rbeauchamp/strict-mojo/workflows/CodeQL/badge.svg)
 
 A comprehensive GitHub template for creating professional Mojo projects with **strict compilation standards**, **zero-tolerance error policies**, and **Python packaging best practices**.
 

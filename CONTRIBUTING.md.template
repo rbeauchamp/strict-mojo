@@ -88,9 +88,6 @@ var unused = value       # ❌ Will fail compilation
 # Build entire project
 pixi run build
 
-# Build specific file
-pixi run build src/module.mojo
-
 # Run all tests
 pixi run test
 
@@ -104,15 +101,7 @@ pixi run run examples/demo.mojo
 pixi run clean
 ```
 
-### Import Paths
-
-For files outside `src/` that import project modules:
-```bash
-# Add -I src flag for imports
-pixi run mojo build -I src examples/demo.mojo
-```
-
-## Making Changes
+### Making Changes
 
 ### 1. Create a Feature Branch
 
@@ -135,10 +124,6 @@ Before committing:
 # Everything must pass
 pixi run build
 pixi run test
-
-# Check specific changes
-pixi run build [your-new-file]
-pixi run test [your-test-file]
 ```
 
 ### 4. Commit Your Changes
@@ -209,14 +194,6 @@ If you see compilation errors:
 2. Look for unused variables (use `_`)
 3. Verify proper self parameter syntax
 4. Ensure all imports are correct
-
-### Import Errors
-
-For import issues in tests/examples:
-```bash
-# Use -I src flag
-pixi run mojo test -I src tests/test_module.mojo
-```
 
 ## Getting Help
 

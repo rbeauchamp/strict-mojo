@@ -54,5 +54,5 @@ def test_fibonacci_negative():
 def test_fibonacci_large():
     """Test fibonacci with larger values for performance."""
     # This tests both correctness and performance
-    result = fibonacci(20)
-    assert_equal(result, 6765)
+    result = fibonacci(30)
+    assert_equal(result, 832040)

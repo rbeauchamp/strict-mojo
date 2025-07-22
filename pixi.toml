@@ -2,7 +2,7 @@
 name = "strict-mojo"
 version = "0.1.0"
 description = "A comprehensive Mojo project template with Python packaging standards"
-authors = ["Your Name <your.email@example.com>"]
+authors = ["Your Name <you@example.com>"]
 channels = ["https://conda.modular.com/max-nightly", "conda-forge"]
 platforms = ["osx-arm64", "linux-64"]
 
@@ -24,10 +24,9 @@ python = "3.13.*"
 pip = "*"
 
 [pypi-dependencies]
-# Lightweight template - users can add their own dependencies
-# Uncomment examples below as needed:
-# numpy = "*"              # For numerical computing
-# pytest = "*"             # For Python-style testing
+# Add your Python dependencies here. For example:
+# numpy = "*"
+# pytest = "*"
 
 [environments]
 default = { solve-group = "default" }

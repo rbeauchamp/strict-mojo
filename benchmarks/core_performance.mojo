@@ -8,6 +8,7 @@ This file demonstrates:
 
 from package_name.core import add, multiply, fibonacci
 from package_name.utils import Timer, format_duration
+from collections import List
 
 
 fn benchmark_fibonacci(n: Int, iterations: Int = 1000) raises -> Int:
@@ -62,7 +63,7 @@ fn benchmark_arithmetic(iterations: Int = 1_000_000) -> Int:
 
 fn benchmark_single_operation(
     operation: String, iterations: Int = 1_000_000
-) -> Int:
+) raises -> Int:
     """Benchmark a single arithmetic operation.
 
     Args:
@@ -92,7 +93,7 @@ fn benchmark_single_operation(
             print("Unexpected result")
         return total_time // iterations
     else:
-        return 0
+        raise Error("Unknown operation: " + operation)
 
 
 fn warm_up() raises:
@@ -200,46 +201,6 @@ fn main() raises:
 
     # Warm up before benchmarking
     warm_up()
-    print()
-
-    # Quick benchmarks
-    print("Quick Performance Check:")
-
-    # Time the arithmetic benchmark itself
-    var timer = Timer()
-    timer.start()
-    var arithmetic_avg = benchmark_arithmetic(1_000_000)
-    var bench_time = timer.stop()
-
-    print(
-        "  Arithmetic operations: "
-        + format_duration(arithmetic_avg)
-        + " per pair (benchmark took "
-        + format_duration(bench_time)
-        + ")"
-    )
-
-    print()
-
-    # Fibonacci performance with larger numbers
-    print("Fibonacci Performance (1000 iterations each):")
-
-    var fib_inputs = List[Int](20, 25, 30, 35, 40)
-
-    for i in range(len(fib_inputs)):
-        var n = fib_inputs[i]
-        timer.start()
-        var avg_time = benchmark_fibonacci(n)
-        var _ = timer.stop()
-
-        print(
-            "  fibonacci("
-            + String(n)
-            + "): "
-            + format_duration(avg_time)
-            + " per call"
-        )
-
     print()
 
     # Run comprehensive benchmarks

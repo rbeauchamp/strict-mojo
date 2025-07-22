@@ -108,19 +108,12 @@ All commands use strict compilation settings with zero tolerance for warnings:
 ```bash
 # Build entire project (all directories)
 pixi run build
-
-# Build specific file  
-pixi run build src/package_name/core.mojo
-
-# Build with custom output
-pixi run build bin/hello.mojo -o build/my_app
 ```
 
 **Note**: The build system automatically:
 
 - Formats code before building
 - Adds import paths for cross-directory imports
-- Detects file types (executable vs library module)
 
 ### Running
 

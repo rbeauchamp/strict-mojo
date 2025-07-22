@@ -59,25 +59,25 @@ def test_format_duration_seconds():
     """Test duration formatting for seconds."""
     # Test 1.5 seconds (1,500,000,000 nanoseconds)
     result = format_duration(1_500_000_000)
-    assert_true("1.50 seconds" in result)
+    assert_equal(result, "1.50 seconds")
 
 
 def test_format_duration_milliseconds():
     """Test duration formatting for milliseconds."""
     # Test 2.5 milliseconds (2,500,000 nanoseconds)
     result = format_duration(2_500_000)
-    assert_true("2.50 milliseconds" in result)
+    assert_equal(result, "2.50 milliseconds")
 
 
 def test_format_duration_microseconds():
     """Test duration formatting for microseconds."""
-    # Test 500.123 microseconds (500,123 nanoseconds)
-    result = format_duration(500_123)
-    assert_true("500.123 microseconds" in result)
+    # Test 500.12 microseconds (500,120 nanoseconds)
+    result = format_duration(500_120)
+    assert_equal(result, "500.12 microseconds")
 
 
 def test_format_duration_nanoseconds():
     """Test duration formatting for small values."""
     # Test 999 nanoseconds
     result = format_duration(999)
-    assert_true("999 nanoseconds" in result)
+    assert_equal(result, "999 nanoseconds")

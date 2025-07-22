@@ -53,9 +53,9 @@ fn greet(name: String) -> String:
 
     Examples:
         >>> greet("Mojo")
-        "Hello, Mojo! Welcome to strict Mojo development.".
+        "Hello, Mojo!".
     """
-    return "Hello, " + name + "! Welcome to strict Mojo development."
+    return "Hello, " + name + "!"
 
 
 fn fibonacci(n: Int) raises -> Int:

@@ -73,6 +73,13 @@ struct Timer:
         return self._is_running
 
 
+fn _format_with_two_decimals(value: Int, fraction: Int, unit: String) -> String:
+    """Helper to format a number with two decimal places."""
+    if fraction < 10:
+        return String(value) + ".0" + String(fraction) + " " + unit
+    return String(value) + "." + String(fraction) + " " + unit
+
+
 fn format_duration(nanoseconds: Int) -> String:
     """Format a duration in nanoseconds into a human-readable string.
 
@@ -88,31 +95,19 @@ fn format_duration(nanoseconds: Int) -> String:
         >>> format_duration(2500000)
         "2.50 milliseconds".
     """
-    var ns = nanoseconds
+    if nanoseconds >= 1_000_000_000:  # Seconds
+        seconds = nanoseconds // 1_000_000_000
+        fraction = (nanoseconds % 1_000_000_000) // 10_000_000
+        return _format_with_two_decimals(seconds, fraction, "seconds")
 
-    # Convert to different units for readability
-    if ns >= 1_000_000_000:  # >= 1 second
-        var seconds = ns // 1_000_000_000
-        var fraction = (ns % 1_000_000_000) // 10_000_000  # 2 decimal places
-        if fraction < 10:
-            return String(seconds) + ".0" + String(fraction) + " seconds"
-        return String(seconds) + "." + String(fraction) + " seconds"
-    elif ns >= 1_000_000:  # >= 1 millisecond
-        var millis = ns // 1_000_000
-        var fraction = (ns % 1_000_000) // 10_000  # 2 decimal places
-        if fraction < 10:
-            return String(millis) + ".0" + String(fraction) + " milliseconds"
-        return String(millis) + "." + String(fraction) + " milliseconds"
-    elif ns >= 1_000:  # >= 1 microsecond
-        var micros = ns // 1_000
-        var fraction = ns % 1_000
-        var f_str: String
-        if fraction < 10:
-            f_str = "00" + String(fraction)
-        elif fraction < 100:
-            f_str = "0" + String(fraction)
-        else:
-            f_str = String(fraction)
-        return String(micros) + "." + f_str + " microseconds"
-    else:
-        return String(ns) + " nanoseconds"
+    if nanoseconds >= 1_000_000:  # Milliseconds
+        milliseconds = nanoseconds // 1_000_000
+        fraction = (nanoseconds % 1_000_000) // 10_000
+        return _format_with_two_decimals(milliseconds, fraction, "milliseconds")
+
+    if nanoseconds >= 1_000:  # Microseconds
+        microseconds = nanoseconds // 1_000
+        fraction = (nanoseconds % 1_000) // 10
+        return _format_with_two_decimals(microseconds, fraction, "microseconds")
+
+    return String(nanoseconds) + " nanoseconds"

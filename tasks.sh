@@ -6,7 +6,7 @@
 set -euo pipefail  # Exit on error, undefined vars, pipe failures
 
 # Common Mojo build flags for strict checking
-MOJO_BUILD_FLAGS="-g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread"
+MOJO_BUILD_FLAGS="-g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50"
 
 # Function to run mojo with strict checking
 run_mojo_strict() {

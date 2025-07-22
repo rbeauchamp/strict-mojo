@@ -16,6 +16,7 @@ This template enforces the **highest code quality standards**:
 - 🔍 **Strict compilation** - Maximum diagnostics and validation enabled
 
 ### Testing Policy
+
 While this template does not yet have automated test coverage enforcement, **comprehensive testing is a firm requirement for all contributions**. All new or modified code must be accompanied by corresponding tests.
 
 ## Getting Started

@@ -1,0 +1,211 @@
+# Contributing to [Your Project Name]
+
+Thank you for your interest in contributing! This project uses strict Mojo development standards to ensure the highest code quality.
+
+## Development Standards
+
+This project enforces **zero-tolerance for warnings**:
+
+- 🚨 **All warnings are errors** - No exceptions
+- 📝 **Complete documentation** - Every function must have docstrings
+- 🎨 **Auto-formatting** - Applied before every build
+- 🔍 **Maximum validation** - All checks enabled
+- 🧪 **Test coverage** - All code must be tested
+
+## Getting Started
+
+### Prerequisites
+
+1. **Mojo SDK** - Latest version from [Modular](https://docs.modular.com/mojo/)
+2. **Pixi** - Package manager
+   ```bash
+   curl -fsSL https://pixi.sh/install.sh | bash
+   ```
+
+### Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone [your-repo-url]
+   cd [your-repo-name]
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   pixi install
+   ```
+
+3. **Verify setup**:
+   ```bash
+   pixi run build
+   pixi run test
+   ```
+
+## Development Workflow
+
+### Code Standards
+
+#### Documentation Requirements
+
+Every function MUST have complete documentation:
+
+```mojo
+fn process_data(input: String, validate: Bool = True) -> Result[String]:
+    """Process input data with optional validation.
+    
+    Args:
+        input: The data to process.
+        validate: Whether to validate input before processing.
+        
+    Returns:
+        Processed data on success, error on failure.
+        
+    Raises:
+        ValueError: If validation fails.
+    """
+    # Implementation
+```
+
+#### Modern Mojo Syntax
+
+Use the current Mojo conventions:
+
+```mojo
+# Struct methods
+fn __init__(out self: MyType)     # Constructors
+fn process(mut self: MyType)      # Mutating methods
+fn get_value(self: MyType)        # Read-only methods
+fn __del__(owned self: MyType)    # Destructors
+
+# Unused variables
+var _ = compute_value()  # ✅ Correct
+var unused = value       # ❌ Will fail compilation
+```
+
+### Building and Testing
+
+```bash
+# Build entire project
+pixi run build
+
+# Run all tests
+pixi run test
+
+# Run specific test
+pixi run test tests/test_module.mojo
+
+# Build and run
+pixi run run examples/demo.mojo
+
+# Clean artifacts
+pixi run clean
+```
+
+### Making Changes
+
+### 1. Create a Feature Branch
+
+```bash
+git checkout -b feature/your-feature-name
+```
+
+### 2. Make Your Changes
+
+- Write tests FIRST (TDD encouraged)
+- Add complete documentation
+- Ensure zero warnings
+- Follow project structure
+
+### 3. Verify Quality
+
+Before committing:
+
+```bash
+# Everything must pass
+pixi run build
+pixi run test
+```
+
+### 4. Commit Your Changes
+
+Use clear, descriptive commit messages:
+```bash
+git add .
+git commit -m "feat: add new data processing function
+
+- Add process_data() to handle input validation
+- Include comprehensive test coverage
+- Update documentation with examples"
+```
+
+## Project Structure
+
+```
+├── src/              # Library code (packages/modules)
+├── tests/            # Test files (test_*.mojo)
+├── bin/              # Executable entry points
+├── examples/         # Usage examples
+├── benchmarks/       # Performance tests
+└── docs/             # Additional documentation
+```
+
+### Adding New Code
+
+- **Library code**: Place in `src/` with proper package structure
+- **Tests**: Create `tests/test_[module].mojo` for each module
+- **Examples**: Add clear, runnable examples in `examples/`
+- **Benchmarks**: Add performance tests in `benchmarks/`
+
+## Pull Request Process
+
+### Before Submitting
+
+- [ ] All tests pass (`pixi run test`)
+- [ ] No warnings in build output
+- [ ] Documentation is complete
+- [ ] Examples are updated if needed
+- [ ] Code follows project style
+
+### PR Guidelines
+
+1. **One feature per PR** - Keep changes focused
+2. **Clear description** - Explain what and why
+3. **Link issues** - Reference related issues
+4. **Add tests** - Every feature needs tests
+5. **Update docs** - Keep documentation current
+
+### Review Process
+
+Your PR will be reviewed for:
+
+- **Correctness** - Does it work as intended?
+- **Documentation** - Is it well documented?
+- **Tests** - Are edge cases covered?
+- **Style** - Does it follow conventions?
+- **Performance** - Any efficiency concerns?
+
+## Common Issues
+
+### Build Failures
+
+If you see compilation errors:
+
+1. Check for missing documentation
+2. Look for unused variables (use `_`)
+3. Verify proper self parameter syntax
+4. Ensure all imports are correct
+
+## Getting Help
+
+- **Questions**: Open a discussion
+- **Bugs**: File an issue with reproduction steps
+- **Features**: Discuss in issues first
+
+## Code of Conduct
+
+- Be respectful and inclusive
+- Provide constructive feedback
+- Help others learn
+- Focus on what's best for the project
+
+Thank you for contributing! Together we're building better Mojo software. 🔥

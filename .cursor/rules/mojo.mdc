@@ -11,16 +11,17 @@ This document enforces the strictest possible Mojo development practices with ze
 ### Zero-Tolerance Build System
 
 - **NEVER** call `mojo` directly - ALWAYS use `pixi run` commands
-- ALL warnings are treated as errors via `strict-mojo.sh` wrapper
+- ALL warnings are treated as errors via `tasks.sh` wrapper
 - No warning suppression mechanisms exist in Mojo - fix all issues
 - The build will fail on ANY diagnostic: warnings, notes, deprecations
 
 ### Mandatory Commands
 
 ```bash
-pixi run build <file.mojo> -o <output>  # Compile with strict checks
-pixi run run <file.mojo>                # Run with strict checks  
-pixi run test                           # Run tests with strict checks
+pixi run build
+pixi run run <file.mojo>
+pixi run test
+pixi run clean
 ```
 
 ### Required Documentation
@@ -92,18 +93,16 @@ var unused = some_function()
 | "assignment was never used" | Change to `var _ =` or remove the variable |
 | "unknown argument in doc string" | Fix docstring formatting - check for extra blank lines |
 | "deprecated" | Update to use non-deprecated APIs |
-| Thread sanitizer warnings | Fix race conditions in concurrent code |
 
 ## Build Pipeline Details
 
 1. `pixi run build/run/test` executes the task from `pixi.toml`
 2. Auto-formats all code: `mojo format --quiet .`
-3. Invokes `strict-mojo.sh` with these flags:
+3. Invokes `tasks.sh` with these flags:
    - `-g`: Debug symbols for better error messages
    - `--diagnose-missing-doc-strings`: Enforce documentation
    - `--validate-doc-strings`: Validate format
    - `--max-notes-per-diagnostic 50`: Full error context
-   - `--sanitize thread`: Detect race conditions
 
 ## Environment Configuration
 
@@ -147,7 +146,7 @@ project_root/
 ├── src/           # Mojo source files
 ├── tests/         # Test files
 ├── pixi.toml      # Project configuration
-├── strict-mojo.sh # Build wrapper (DO NOT MODIFY)
+├── tasks.sh # Build wrapper (DO NOT MODIFY)
 └── CLAUDE.md      # AI assistant instructions
 ```
 

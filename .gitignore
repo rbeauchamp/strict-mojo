@@ -1,53 +1,82 @@
-# Mojo
-*.mojopkg
-__pycache__/
-
-# Compiled binaries (no extension on Unix)
-# Add specific binary names here as needed
-/main
-/test
-/app
-
-# Build artifacts
+# Mojo build artifacts
+.mojo/
 build/
-dist/
+packages/
+*.mojopkg
 *.o
-*.a
 *.so
-*.dylib
-*.dll
-
-# Debug files
 *.dSYM/
-*.pdb
 
-# Pixi
-.pixi/
-pixi.lock
-
-# Python
+# Python artifacts (for interop)
+__pycache__/
 *.py[cod]
 *$py.class
-.Python
 *.egg-info/
-.eggs/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
 
-# IDEs
+# Virtual environments
+.env
+.venv/
+venv/
+ENV/
+env/
+
+# Package managers
+.pixi/
+*.lock.bak
+node_modules/
+.yarn/
+.pnp.*
+
+# IDEs and editors
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-
-# OS
 .DS_Store
 Thumbs.db
 
-# Testing
-.coverage
-.pytest_cache/
-htmlcov/
-
 # Documentation
+docs/site/
 docs/_build/
+.sphinx/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+.temp/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
 *.log
+logs/
+
+# Runtime files
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# Debug files
+debug.log
+.debug/
+
+# Benchmark results
+benchmark_results.txt
+benchmark_results.json

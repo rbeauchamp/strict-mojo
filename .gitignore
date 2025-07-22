@@ -26,7 +26,6 @@ env/
 
 # Package managers
 .pixi/
-pixi.lock
 *.lock.bak
 node_modules/
 .yarn/

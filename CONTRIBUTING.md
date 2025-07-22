@@ -15,6 +15,10 @@ This template enforces the **highest code quality standards**:
 - 🎨 **Automatic formatting** - Code is automatically formatted before builds
 - 🔍 **Strict compilation** - Maximum diagnostics and validation enabled
 
+### Testing Policy
+
+While this template does not yet have automated test coverage enforcement, **comprehensive testing is a firm requirement for all contributions**. All new or modified code must be accompanied by corresponding tests.
+
 ## Getting Started
 
 ### Prerequisites
@@ -106,7 +110,7 @@ This template enforces the **highest code quality standards**:
 
 ### Code Standards
 
-All code must follow Mojo best practices:
+All code must follow Mojo best practices and adhere to the project's strict standards. This includes complete documentation for all public functions and comprehensive test coverage for all logic.
 
 ```mojo
 fn example_function(x: Int, y: String) -> Bool:

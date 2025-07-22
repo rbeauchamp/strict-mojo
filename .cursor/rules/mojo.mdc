@@ -134,10 +134,10 @@ These environment variables are set automatically via pixi:
 
 ## Testing Requirements
 
-- All code must have tests
-- Tests must pass before committing
-- Use Mojo's `testing` module for unit tests
-- Test files go in `tests/` directory
+- All code must have tests. This is a strict policy for all contributions, even though it is not yet automatically enforced by the CI pipeline.
+- Tests must pass before committing.
+- Use Mojo's `testing` module for unit tests.
+- Test files go in `tests/` directory.
 
 ## File Organization
 

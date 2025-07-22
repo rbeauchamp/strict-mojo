@@ -1,20 +1,15 @@
-# Pixi configuration for strict Mojo development
-# This file defines project metadata, dependencies, and build tasks
-# Documentation: https://pixi.sh/
-
 [workspace]
-# Update these values for your project:
 authors = ["Your Name <your.email@example.com>"]
+channels = ["https://conda.modular.com/max-nightly", "conda-forge"]
 name = "your-project-name"
+platforms = ["osx-arm64"]
 version = "0.1.0"
 
-# Package sources - DO NOT MODIFY
-# - conda.modular.com/max-nightly: Official Mojo/MAX packages
-# - conda-forge: Community packages for Python and tools
-channels = ["https://conda.modular.com/max-nightly", "conda-forge"]
-
-# Note: Address sanitizer only works on Linux, thread sanitizer works on all
-platforms = ["osx-arm64", "linux-64", "linux-aarch64"]
+[tasks]
+build = "./tasks.sh build"
+run = "./tasks.sh run"
+test = "./tasks.sh test"
+clean = "./tasks.sh clean"
 
 [dependencies]
 # Mojo compiler - using 25.4.* for stability while allowing patch updates
@@ -34,32 +29,8 @@ pip = "*"
 # Example: numpy = "*"
 # Example: pandas = ">=2.0"
 
-[tasks]
-# Build tasks with strict enforcement - DO NOT MODIFY these flags
-# Each task runs two steps:
-# 1. Auto-format all code with `mojo format --quiet .`
-# 2. Compile with strict-mojo.sh wrapper that treats ALL warnings as errors
-
-# Compiler flags explained:
-# -g                              : Include debug symbols for better error messages
-# --diagnose-missing-doc-strings  : Require documentation for all public functions
-# --validate-doc-strings          : Validate docstring format (Args/Returns sections)
-# --max-notes-per-diagnostic 50   : Show detailed context for errors
-# --sanitize thread               : Enable ThreadSanitizer for race condition detection
-#                                   (Address sanitizer not used due to macOS ARM64 issues)
-
-build = "./tasks.sh build"
-run = "./tasks.sh run"
-test = "./tasks.sh test"
-clean = "./tasks.sh clean"
-
 [environments]
-# Default environment configuration
-default = { features = [], solve-group = "default" }
-
-[activation]
-# Environment variables set when entering the pixi environment
-# These ensure maximum strictness at runtime
+default = { solve-group = "default" }
 
 [activation.env]
 # Treat all Python interop warnings as errors (no silent failures)

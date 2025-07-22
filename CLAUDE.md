@@ -14,7 +14,7 @@ These files contain authoritative guidance that applies to all AI assistants wor
 
 ## Project Overview
 
-This is a strict Mojo template that enforces zero-tolerance for warnings and requires complete documentation for all code. The architecture consists of a build wrapper (`strict-mojo.sh`) that intercepts all Mojo compiler output and treats any diagnostic (warnings, notes, deprecations) as a hard error.
+This is a strict Mojo template that enforces zero-tolerance for warnings and requires complete documentation for all code. The architecture consists of a build wrapper (`tasks.sh`) that intercepts all Mojo compiler output and treats any diagnostic (warnings, notes, deprecations) as a hard error.
 
 ## Commands
 
@@ -32,7 +32,7 @@ pixi run test                           # Run tests with strict checks
 pixi install                            # Install after modifying pixi.toml
 ```
 
-**NEVER** call `mojo` or `./strict-mojo.sh` directly - always use pixi tasks.
+**NEVER** call `mojo` or `./tasks.sh` directly - always use pixi tasks.
 
 ## Architecture
 
@@ -40,14 +40,14 @@ pixi install                            # Install after modifying pixi.toml
 
 1. `pixi run build/run/test` invokes the task defined in `pixi.toml`
 2. Tasks first run `mojo format --quiet .` to auto-format all code
-3. Then invoke `strict-mojo.sh` with compiler flags:
+3. Then invoke `tasks.sh` with compiler flags:
    - `-g`: Debug symbols
    - `--diagnose-missing-doc-strings`: Require documentation
    - `--validate-doc-strings`: Validate doc format
    - `--max-notes-per-diagnostic 50`: Full error context
    - `--sanitize thread`: Thread safety checks
 
-### Strict Wrapper (`strict-mojo.sh`)
+### Strict Wrapper (`tasks.sh`)
 
 - Captures all Mojo compiler output
 - Searches for `warning:`, `note:`, `deprecated:`, `DEPRECATED`

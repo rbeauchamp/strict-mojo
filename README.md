@@ -88,7 +88,7 @@ fn example():
 
 ### 3. All Warnings Are Errors
 
-The custom `strict-mojo.sh` wrapper ensures that ANY warning will cause compilation to fail.
+The custom `tasks.sh` wrapper ensures that ANY warning will cause compilation to fail.
 
 ## Customization
 
@@ -108,11 +108,11 @@ Then run `pixi install` to install them.
 
 ```text
 your-project/
-├── pixi.toml           # Project configuration
-├── strict-mojo.sh      # Strict compilation wrapper
-├── README.md           # This file
-├── .gitignore          # Git ignore rules
-└── src/                # Your Mojo source files (create this)
+├── pixi.toml     # Project configuration
+├── tasks.sh      # Strict compilation wrapper
+├── README.md     # This file
+├── .gitignore    # Git ignore rules
+└── src/          # Your Mojo source files
 ```
 
 ## Why So Strict?

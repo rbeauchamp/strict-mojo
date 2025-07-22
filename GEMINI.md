@@ -32,11 +32,8 @@ This project uses a zero-tolerance approach to code quality, treating all warnin
 
 ```bash
 pixi run build                      # Build entire project
-pixi run build <file.mojo>          # Build specific file
-pixi run build <file.mojo> -o out   # Build with custom output
 pixi run run <file.mojo>            # Build and execute
 pixi run test                       # Run all tests
-pixi run test <test.mojo>           # Run specific test
 pixi run clean                      # Clean build artifacts
 ```
 
@@ -57,7 +54,6 @@ pixi install                        # Install after modifying pixi.toml
    - `--diagnose-missing-doc-strings`: Enforce documentation
    - `--validate-doc-strings`: Validate doc format
    - `--max-notes-per-diagnostic 50`: Full error context
-   - `--sanitize thread`: Thread safety checks
 4. **Error interception** → ANY diagnostic treated as error
 
 ### Import Paths

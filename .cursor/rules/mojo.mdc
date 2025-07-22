@@ -18,9 +18,10 @@ This document enforces the strictest possible Mojo development practices with ze
 ### Mandatory Commands
 
 ```bash
-pixi run build <file.mojo> -o <output>  # Compile with strict checks
-pixi run run <file.mojo>                # Run with strict checks  
-pixi run test                           # Run tests with strict checks
+pixi run build
+pixi run run <file.mojo>
+pixi run test
+pixi run clean
 ```
 
 ### Required Documentation
@@ -92,7 +93,6 @@ var unused = some_function()
 | "assignment was never used" | Change to `var _ =` or remove the variable |
 | "unknown argument in doc string" | Fix docstring formatting - check for extra blank lines |
 | "deprecated" | Update to use non-deprecated APIs |
-| Thread sanitizer warnings | Fix race conditions in concurrent code |
 
 ## Build Pipeline Details
 
@@ -103,7 +103,6 @@ var unused = some_function()
    - `--diagnose-missing-doc-strings`: Enforce documentation
    - `--validate-doc-strings`: Validate format
    - `--max-notes-per-diagnostic 50`: Full error context
-   - `--sanitize thread`: Detect race conditions
 
 ## Environment Configuration
 

@@ -87,7 +87,7 @@ case "$command" in
         mkdir -p build
         
         format_files  # Format all files when building entire project
-        echo "🔨 Building with strict checks and thread sanitizer..."
+        echo "🔨 Building with strict checks..."
         echo "   Building entire project..."
         
         # Build all executables from bin/
@@ -170,7 +170,7 @@ case "$command" in
         # Format only the specific file being run
         format_files "$source_file"
         
-        echo "🚀 Building and running with thread sanitizer..."
+        echo "🚀 Building and running..."
         
         # Create build directory if it doesn't exist
         mkdir -p build
@@ -258,7 +258,7 @@ case "$command" in
         echo ""
         echo "Commands:"
         echo "  build  - Compile the entire project with strict checks"
-        echo "  run    - Build and execute a specific file with thread sanitizer"
+        echo "  run    - Build and execute a specific file"
         echo "  test   - Run all tests, or a specific test file"
         echo "  clean  - Remove all build artifacts, executables, and pixi environments"
         echo "           Use 'clean --cache' to also clean pixi cache"

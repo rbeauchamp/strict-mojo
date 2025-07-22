@@ -14,7 +14,7 @@ A comprehensive GitHub template for creating professional Mojo projects with **s
 - 🧪 **Comprehensive Testing** - Built-in test structure with examples
 - 🏗️ **Standard Project Layout** - Follows Python packaging conventions adapted for Mojo
 - ⚡ **Performance Benchmarking** - Included benchmark framework
-- 🐛 **Runtime Safety** - Thread sanitizer and debug assertions enabled
+- 🐛 **Runtime Safety** - Debug assertions enabled
 - 📦 **Modern Package Management** - Uses Pixi for dependency management
 - 🤖 **AI Assistant Ready** - Pre-configured for Claude and Gemini AI assistants
 
@@ -237,7 +237,6 @@ fn test_calculate_area() raises:
 
 All builds include:
 
-- Thread sanitizer for concurrency bugs
 - Debug assertions for runtime checks  
 - Maximum diagnostic output for debugging
 

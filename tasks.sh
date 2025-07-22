@@ -96,7 +96,7 @@ case "$command" in
                     if [ -f "$executable_file" ]; then
                         executable="build/$(basename "$executable_file" .mojo)"
                         echo "      $executable_file → $executable"
-                        run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread "$executable_file" -o "$executable"
+                        run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread -I src "$executable_file" -o "$executable"
                     fi
                 done
             fi
@@ -115,6 +115,42 @@ case "$command" in
                         object_file="build/$(basename "$library_file" .mojo).o"
                         echo "      $library_file → $object_file"
                         run_mojo_strict build --emit object -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread "$library_file" -o "$object_file"
+                    fi
+                done
+            fi
+            
+            # Build all examples
+            if [ -d "examples" ]; then
+                echo "   📚 Building examples:"
+                for example_file in examples/*.mojo; do
+                    if [ -f "$example_file" ]; then
+                        executable="build/$(basename "$example_file" .mojo)"
+                        echo "      $example_file → $executable"
+                        run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread -I src "$example_file" -o "$executable"
+                    fi
+                done
+            fi
+            
+            # Build all benchmarks
+            if [ -d "benchmarks" ]; then
+                echo "   ⚡ Building benchmarks:"
+                for benchmark_file in benchmarks/*.mojo; do
+                    if [ -f "$benchmark_file" ]; then
+                        executable="build/$(basename "$benchmark_file" .mojo)"
+                        echo "      $benchmark_file → $executable"
+                        run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread -I src "$benchmark_file" -o "$executable"
+                    fi
+                done
+            fi
+            
+            # Validate all test modules
+            if [ -d "tests" ]; then
+                echo "   🧪 Validating test modules:"
+                for test_file in tests/*.mojo; do
+                    if [ -f "$test_file" ]; then
+                        object_file="build/$(basename "$test_file" .mojo).o"
+                        echo "      $test_file → $object_file"
+                        run_mojo_strict build --emit object -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread -I src "$test_file" -o "$object_file"
                     fi
                 done
             fi

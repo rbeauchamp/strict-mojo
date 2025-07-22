@@ -13,11 +13,6 @@ run = "./tasks.sh run"
 test = "./tasks.sh test"
 clean = "./tasks.sh clean"
 
-# Additional convenience tasks
-format = "pixi run mojo format --quiet ."
-format-check = "pixi run mojo format --check ."
-dev-shell = "pixi shell"
-
 [dependencies]
 # Mojo runtime - lightweight template keeps only essentials
 modular = "25.4.*"

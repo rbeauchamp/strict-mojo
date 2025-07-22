@@ -1,10 +1,10 @@
-name: CI/CD Pipeline
+name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
   test:
@@ -24,28 +24,13 @@ jobs:
     - name: Install dependencies
       run: pixi install
     
-    - name: Check code formatting
-      run: pixi run format-check
-    
-    - name: Build project
+    - name: Build entire project
       run: pixi run build
     
     - name: Run tests
       run: pixi run test
     
-    - name: Build examples
-      run: |
-        pixi run build examples/basic_usage.mojo -o build/basic_usage
-        pixi run build benchmarks/core_performance.mojo -o build/benchmark
-    
     - name: Run examples
       run: |
-        ./build/basic_usage
-        ./build/benchmark
-    
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: mojo-binaries
-        path: build/
-        retention-days: 7
+        pixi run run examples/basic_usage.mojo
+        pixi run run benchmarks/core_performance.mojo

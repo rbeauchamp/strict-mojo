@@ -8,4 +8,4 @@ This package shows best practices for:
 """
 
 from .core import add, multiply, greet, fibonacci
-from .utils import Timer
+from .utils import Timer, format_duration

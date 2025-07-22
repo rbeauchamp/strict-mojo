@@ -138,7 +138,12 @@ case "$command" in
             
             echo "🔨 Building with strict checks and thread sanitizer..."
             # Output specified, use it as-is - let user control compilation mode
-            run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread "$@"
+            # Add -I src if source file is not in src/
+            if [ -n "$source_file" ] && [[ "$source_file" != src/* ]]; then
+                run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread -I src "$@"
+            else
+                run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread "$@"
+            fi
         else
             # No output specified, determine compilation mode based on file location
             source_file="$1"
@@ -158,21 +163,33 @@ case "$command" in
                 # Executable file - build as executable
                 executable="build/$(basename "$source_file" .mojo)"
                 echo "   Building executable: $source_file → $executable"
-                run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread "$source_file" -o "$executable"
-            elif [[ "$source_file" == src/* ]] || [[ "$source_file" == tests/* ]]; then
-                # Library module - build as object file for validation
+                run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread -I src "$source_file" -o "$executable"
+            elif [[ "$source_file" == src/* ]]; then
+                # Library module - build as object file for validation (no -I src needed)
                 object_file="build/$(basename "$source_file" .mojo).o"
                 echo "   Building library module: $source_file → $object_file"
-
                 run_mojo_strict build --emit object -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread "$source_file" -o "$object_file"
+            elif [[ "$source_file" == tests/* ]] || [[ "$source_file" == examples/* ]] || [[ "$source_file" == benchmarks/* ]]; then
+                # Test/example/benchmark files need -I src for imports
+                if [[ "$source_file" == tests/* ]]; then
+                    # Tests are library modules
+                    object_file="build/$(basename "$source_file" .mojo).o"
+                    echo "   Building test module: $source_file → $object_file"
+                    run_mojo_strict build --emit object -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread -I src "$source_file" -o "$object_file"
+                else
+                    # Examples and benchmarks are executables
+                    executable="build/$(basename "$source_file" .mojo)"
+                    echo "   Building $([[ "$source_file" == examples/* ]] && echo "example" || echo "benchmark"): $source_file → $executable"
+                    run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread -I src "$source_file" -o "$executable"
+                fi
             else
-                # Unknown location - try as executable first, fallback to library
+                # Unknown location - try as executable with -I src
                 executable="build/$(basename "$source_file" .mojo)"
                 echo "   Building (auto-detect): $source_file → $executable"
-                if ! run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread "$source_file" -o "$executable" 2>/dev/null; then
+                if ! run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread -I src "$source_file" -o "$executable" 2>/dev/null; then
                     echo "   Executable build failed, trying as library module..."
                     object_file="build/$(basename "$source_file" .mojo).o"
-                    run_mojo_strict build --emit object -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread "$source_file" -o "$object_file"
+                    run_mojo_strict build --emit object -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread -I src "$source_file" -o "$object_file"
                 fi
             fi
         fi
@@ -199,7 +216,12 @@ case "$command" in
         executable="build/$(basename "$source_file" .mojo)"
         
         echo "   Building $source_file → $executable"
-        run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --sanitize thread "$source_file" -o "$executable"
+        # Add -I src for files that might need to import from src/
+        if [[ "$source_file" != src/* ]]; then
+            run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --sanitize thread -I src "$source_file" -o "$executable"
+        else
+            run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --sanitize thread "$source_file" -o "$executable"
+        fi
         
         echo "   Executing ./$executable"
         "./$executable"
@@ -207,7 +229,7 @@ case "$command" in
         
     "test")
         # If specific test file provided, validate it as a library module first
-        if [[ "$1" == *.mojo ]]; then
+        if [ $# -gt 0 ] && [[ "$1" == *.mojo ]]; then
             test_file="$1"
             
             # Format only the specific test file
@@ -217,12 +239,12 @@ case "$command" in
             echo "   Validating test file as library module: $test_file"
             
             # Validate documentation and syntax by building as object file
-            run_mojo_strict build --emit object -g --diagnose-missing-doc-strings --validate-doc-strings "$test_file" -o /tmp/test_validation.o
+            run_mojo_strict build --emit object -g --diagnose-missing-doc-strings --validate-doc-strings -I src "$test_file" -o /tmp/test_validation.o
             rm -f /tmp/test_validation.o
             
             echo "   Documentation validation passed"
             echo "   Running tests: $test_file"
-            run_mojo_strict test -g --diagnose-missing-doc-strings --validate-doc-strings --sanitize thread "$test_file"
+            run_mojo_strict test -g --diagnose-missing-doc-strings --validate-doc-strings --sanitize thread -I src "$test_file"
         else
             # Run all tests (directory or pattern) - format all test files
             format_files  # Format all files when running full test suite
@@ -230,7 +252,7 @@ case "$command" in
             echo "🧪 Testing with strict compilation checks..."
             # Run all tests (directory or pattern)
             echo "   Running test suite: $*"
-            run_mojo_strict test -g --diagnose-missing-doc-strings --validate-doc-strings --sanitize thread "$@"
+            run_mojo_strict test -g --diagnose-missing-doc-strings --validate-doc-strings --sanitize thread -I src "$@"
         fi
         ;;
         

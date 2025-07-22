@@ -32,14 +32,14 @@ fn demonstrate_timing():
     """Show how to use the Timer utility for performance measurement."""
     print("Timer utility:")
     var timer = Timer()
-    
+
     # Time a simple computation
     timer.start()
     var result = 0
     for i in range(1_000_000):
         result += i
     var elapsed = timer.stop()
-    
+
     print("  Sum of first 1,000,000 integers:", result)
     print("  Time elapsed:", format_duration(elapsed))
     print()
@@ -48,11 +48,11 @@ fn demonstrate_timing():
 fn demonstrate_fibonacci() raises:
     """Show fibonacci function usage with error handling."""
     print("Fibonacci sequence:")
-    
+
     # Calculate and display first few fibonacci numbers
     for i in range(8):
         print("  fib(" + String(i) + ") =", fibonacci(i))
-    
+
     print()
     print("Error handling:")
     try:
@@ -66,14 +66,14 @@ fn measure_function_performance() raises:
     """Demonstrate timing individual function calls."""
     print("Performance measurement:")
     var timer = Timer()
-    
+
     # Measure fibonacci performance
     timer.start()
     var fib_result = fibonacci(30)
     var fib_time = timer.stop()
     print("  fibonacci(30) =", fib_result)
     print("  Computation time:", format_duration(fib_time))
-    
+
     # Measure batch operations
     timer.start()
     var total = 0
@@ -87,19 +87,19 @@ fn measure_function_performance() raises:
 
 fn main() raises:
     """Main entry point demonstrating package usage.
-    
+
     This example shows how to structure a Mojo application using
     the strict project template with proper imports and utilities.
     """
     print("=== Strict Mojo Project Template Example ===")
     print()
-    
+
     # Demonstrate various functionalities
     demonstrate_arithmetic()
     demonstrate_strings()
     demonstrate_timing()
     demonstrate_fibonacci()
     measure_function_performance()
-    
+
     print("=== Example completed successfully! ===")
     print("This demonstrates the basic project structure and usage patterns.")

@@ -223,9 +223,11 @@ See `src/package_name/utils.mojo` for the complete Timer implementation.
 
 ### 4. **Comprehensive Testing**
 
-Every public function must have tests:
+This template promotes a strong testing culture. While test coverage is not automatically enforced by the tooling, **all contributions are expected to include comprehensive tests**. Every public function should have corresponding tests that cover its core logic and edge cases.
 
 ```mojo
+from testing import assert_equal
+
 fn test_calculate_area() raises:
     """Test area calculation with various inputs."""
     assert_equal(calculate_area(5.0, 3.0), 15.0)

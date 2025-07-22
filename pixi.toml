@@ -48,9 +48,10 @@ pip = "*"
 # --sanitize thread               : Enable ThreadSanitizer for race condition detection
 #                                   (Address sanitizer not used due to macOS ARM64 issues)
 
-build = "mojo format --quiet . && ./strict-mojo.sh build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread"
-run = "mojo format --quiet . && ./strict-mojo.sh run -g --diagnose-missing-doc-strings --validate-doc-strings --sanitize thread"
-test = "mojo format --quiet . && ./strict-mojo.sh test -g --diagnose-missing-doc-strings --validate-doc-strings --sanitize thread"
+build = "./tasks.sh build"
+run = "./tasks.sh run"
+test = "./tasks.sh test"
+clean = "./tasks.sh clean"
 
 [environments]
 # Default environment configuration

@@ -200,9 +200,10 @@ case "$command" in
         source_file="$1"
         if [ -z "$source_file" ]; then
             echo "❌ ERROR: No source file provided"
-            echo "Usage: ./tasks.sh run <source.mojo>"
+            echo "Usage: ./tasks.sh run <source.mojo> [args...]"
             exit 1
         fi
+        shift  # Remove source file from arguments
         
         # Format only the specific file being run
         format_files "$source_file"
@@ -224,7 +225,7 @@ case "$command" in
         fi
         
         echo "   Executing ./$executable"
-        "./$executable"
+        "./$executable" "$@"
         ;;
         
     "test")

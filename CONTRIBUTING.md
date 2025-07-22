@@ -1,259 +1,217 @@
 # Contributing to Strict Mojo Template
 
-Thank you for considering contributing to the Strict Mojo Template! This guide will help you understand our development process and standards.
+Thank you for contributing to the Strict Mojo Template! This guide is for contributors who want to improve the template itself.
+
+## About This Template
+
+This is a GitHub template repository that provides a strict, zero-warnings Mojo project structure. Your contributions help the entire Mojo community build better software.
 
 ## Development Standards
 
-This project maintains the **highest possible code quality standards**:
+This template enforces the **highest code quality standards**:
 
 - 🚨 **Zero warnings tolerance** - All warnings are treated as errors
 - 📝 **Mandatory documentation** - Every function must have proper docstrings
 - 🎨 **Automatic formatting** - Code is automatically formatted before builds
 - 🔍 **Strict compilation** - Maximum diagnostics and validation enabled
-- 🧪 **Comprehensive testing** - All code must have corresponding tests
 
 ## Getting Started
 
 ### Prerequisites
 
 1. **Mojo SDK** - Latest version from [Modular](https://docs.modular.com/mojo/)
-2. **Pixi** - Package manager for the project
-
-   ```bash
-   curl -fsSL https://pixi.sh/install.sh | bash
-   ```
-
+2. **Pixi** - Package manager (install via `curl -fsSL https://pixi.sh/install.sh | bash`)
 3. **Git** - Version control
 
 ### Setup
 
 1. **Fork and clone** the repository:
-
    ```bash
    git clone https://github.com/yourusername/strict-mojo.git
    cd strict-mojo
    ```
 
 2. **Install dependencies**:
-
    ```bash
    pixi install
    ```
 
 3. **Verify setup**:
-
    ```bash
    pixi run build
    pixi run test
    ```
 
+## Areas for Contribution
+
+### 1. Template Infrastructure
+
+- Improve `tasks.sh` build wrapper
+- Enhance error detection patterns
+- Add new pixi tasks
+- Optimize build performance
+
+### 2. Example Code
+
+- Improve example modules in `src/package_name/`
+- Add more comprehensive examples
+- Enhance benchmarks
+- Create better test patterns
+
+### 3. Documentation
+
+- Improve README.md
+- Enhance AI assistant files (CLAUDE.md, GEMINI.md)
+- Add more code examples
+- Fix typos and clarify instructions
+
+### 4. Developer Experience
+
+- Add new GitHub Actions workflows
+- Create issue/PR templates
+- Improve error messages
+- Add development tools
+
 ## Development Workflow
 
-### 1. Code Standards
+### Working with the Template
 
-All code must follow these strict standards:
+1. **Understand the structure**:
+   - `tasks.sh` - Core build wrapper enforcing strict checks
+   - `pixi.toml` - Project configuration and tasks
+   - `src/package_name/` - Example package structure
+   - `tests/` - Example test structure
 
-#### Documentation Requirements
+2. **Test your changes**:
+   ```bash
+   # Build everything
+   pixi run build
+   
+   # Run tests
+   pixi run test
+   
+   # Test specific components
+   pixi run build src/package_name/core.mojo
+   pixi run run examples/basic_usage.mojo
+   ```
 
-Every function must have a complete docstring:
+3. **Verify strict mode works**:
+   - Introduce a warning intentionally
+   - Confirm build fails
+   - Fix the warning
+
+### Code Standards
+
+All code must follow Mojo best practices:
 
 ```mojo
-fn calculate_sum(a: Int, b: Int) -> Int:
-    """Calculate the sum of two integers.
+fn example_function(x: Int, y: String) -> Bool:
+    """Brief description of what the function does.
     
     Args:
-        a: First integer operand.
-        b: Second integer operand.
+        x: Description of parameter x.
+        y: Description of parameter y.
         
     Returns:
-        The sum of a and b.
-        
-    Examples:
-        >>> calculate_sum(5, 3)
-        8
+        Description of return value.
     """
-    return a + b
+    # Implementation
 ```
 
-#### No Warnings Policy
+Use modern Mojo syntax:
+- `out self` for constructors
+- `mut self` for mutating methods
+- `_` for unused variables
 
-- Zero warnings are allowed in compilation
-- All potential issues must be fixed, not suppressed
-- Use `_` for intentionally unused variables
+## Submitting Changes
 
-#### Testing Requirements
+### Before Creating a PR
 
-- Every public function must have tests
-- Tests must cover normal cases, edge cases, and error conditions
-- Use descriptive test names that explain what is being tested
-
-### 2. Development Commands
-
-Use these commands during development:
-
-```bash
-# Format code (done automatically before builds)
-pixi run format
-
-# Check formatting without making changes
-pixi run format-check
-
-# Build the entire project
-pixi run build
-
-# Build a specific file
-pixi run build src/package_name/core.mojo
-
-# Run tests
-pixi run test
-
-# Run a specific test file
-pixi run test test/test_core.mojo
-
-# Clean build artifacts
-pixi run clean
-```
-
-### 3. Adding New Features
-
-When adding new functionality:
-
-1. **Write tests first** (TDD approach recommended)
-2. **Add documentation** for all public APIs
-3. **Update examples** if the change affects usage
-4. **Verify strict compilation** with all checks enabled
-
-### 4. Project Structure
-
-Follow this structure for new files:
-
-```text
-strict-mojo/
-├── src/package_name/          # Library code
-├── bin/                       # Executable files
-├── test/                      # Test files (test_*.mojo)
-├── examples/                  # Usage examples
-├── benchmarks/                # Performance benchmarks
-├── docs/                      # Documentation
-└── .github/                   # GitHub templates
-```
-
-## Pull Request Process
-
-### Before Submitting
-
-1. **Run all checks locally**:
-
+1. **Ensure all checks pass**:
    ```bash
-   pixi run format-check  # Verify formatting
-   pixi run build         # Verify compilation
-   pixi run test          # Verify all tests pass
+   pixi run build
+   pixi run test
    ```
 
-2. **Verify examples still work**:
+2. **Test the template workflow**:
+   - Create a new project from your fork
+   - Verify it builds correctly
+   - Ensure strict mode catches warnings
 
-   ```bash
-   pixi run build examples/basic_usage.mojo -o build/example
-   ./build/example
-   ```
-
-3. **Check your changes**:
-   - [ ] All new code has documentation
-   - [ ] All new code has tests
-   - [ ] No warnings or notes in compilation output
-   - [ ] Examples are updated if needed
-   - [ ] Commit messages are descriptive
+3. **Update documentation**:
+   - Update README if needed
+   - Update AI assistant files if behavior changes
+   - Ensure examples still work
 
 ### Pull Request Guidelines
 
-1. **Create a focused PR** - One feature/fix per PR
-2. **Use descriptive titles** - Clearly explain what the PR does
-3. **Fill out the PR template** - Provide all requested information
-4. **Link related issues** - Reference any relevant issue numbers
-5. **Request review** - Tag maintainers for review
+1. **One feature per PR** - Keep changes focused
+2. **Clear description** - Explain what and why
+3. **Show it working** - Include example output
+4. **Update tests** - Add tests for new features
+5. **Document changes** - Update relevant docs
 
-### Review Process
+### What Makes a Good PR
 
-All PRs must:
+- ✅ Improves developer experience
+- ✅ Maintains zero-warnings philosophy  
+- ✅ Includes tests and documentation
+- ✅ Works across different Mojo versions
+- ✅ Follows existing code style
 
-- [ ] Pass all automated checks
-- [ ] Have clean, documented code
-- [ ] Include appropriate tests
-- [ ] Follow project conventions
-- [ ] Be approved by a maintainer
+## Testing the Template
 
-## Code Review Standards
+When modifying the template, test that it works correctly:
 
-When reviewing code, we check for:
+```bash
+# Create a test project
+cp -r . /tmp/test-strict-mojo
+cd /tmp/test-strict-mojo
 
-### Technical Quality
+# Remove template-specific files
+rm -rf .git
 
-- Correctness and efficiency
-- Proper error handling
-- Thread safety where applicable
-- Performance implications
+# Initialize as new project
+git init
+pixi install
+pixi run build
+pixi run test
+```
 
-### Documentation
+## Common Contributions
 
-- Complete and accurate docstrings
-- Clear parameter and return descriptions
-- Useful examples where appropriate
-- Updated README if needed
+### Adding a New Pixi Task
 
-### Testing
+1. Edit `pixi.toml` to add the task
+2. Update README.md with usage
+3. Add example in CONTRIBUTING.md
+4. Test the task thoroughly
 
-- Comprehensive test coverage
-- Edge case handling
-- Error condition testing
-- Performance considerations
+### Improving Error Detection
 
-## Issue Reporting
+1. Edit `tasks.sh` to catch new patterns
+2. Add test case that triggers the error
+3. Verify it fails appropriately
+4. Document the new check
 
-### Bug Reports
+### Enhancing Examples
 
-Use the bug report template and include:
+1. Keep examples simple and focused
+2. Ensure they demonstrate best practices
+3. Add comprehensive documentation
+4. Make them actually useful
 
-- Clear description of the issue
-- Steps to reproduce
-- Expected vs actual behavior
-- Environment information
-- Any relevant error messages
+## Questions and Support
 
-### Feature Requests
-
-Use the feature request template and include:
-
-- Clear description of the proposed feature
-- Use case and problem it solves
-- Proposed implementation approach
-- Alternatives considered
-
-## Community Guidelines
-
-### Be Respectful
-
-- Use inclusive language
-- Respect different viewpoints
-- Provide constructive feedback
-- Help newcomers learn
-
-### Be Collaborative
-
-- Share knowledge and resources
-- Review others' contributions
-- Participate in discussions
-- Help maintain project quality
-
-## Questions?
-
-- **General questions**: Start a [discussion](https://github.com/yourusername/strict-mojo/discussions)
-- **Bug reports**: Open an [issue](https://github.com/yourusername/strict-mojo/issues)
-- **Feature requests**: Open an [issue](https://github.com/yourusername/strict-mojo/issues)
+- **Questions**: Open a [discussion](https://github.com/rdancer/strict-mojo/discussions)
+- **Bugs**: Open an [issue](https://github.com/rdancer/strict-mojo/issues)
+- **Ideas**: Share in discussions first
 
 ## Recognition
 
-Contributors who help improve this template will be recognized in the README and release notes. We appreciate all forms of contribution, from code to documentation to issue reports!
+Contributors are recognized in:
+- README.md contributors section
+- Release notes
+- GitHub contributors page
 
----
-
-Thank you for contributing to the Strict Mojo Template! Your help makes the Mojo community stronger. 🔥
+Thank you for making the Strict Mojo Template better! 🔥

@@ -26,17 +26,20 @@ This template enforces the **highest code quality standards**:
 ### Setup
 
 1. **Fork and clone** the repository:
+
    ```bash
    git clone https://github.com/yourusername/strict-mojo.git
    cd strict-mojo
    ```
 
 2. **Install dependencies**:
+
    ```bash
    pixi install
    ```
 
 3. **Verify setup**:
+
    ```bash
    pixi run build
    pixi run test
@@ -83,6 +86,7 @@ This template enforces the **highest code quality standards**:
    - `tests/` - Example test structure
 
 2. **Test your changes**:
+
    ```bash
    # Build everything
    pixi run build
@@ -119,6 +123,7 @@ fn example_function(x: Int, y: String) -> Bool:
 ```
 
 Use modern Mojo syntax:
+
 - `out self` for constructors
 - `mut self` for mutating methods
 - `_` for unused variables
@@ -128,6 +133,7 @@ Use modern Mojo syntax:
 ### Before Creating a PR
 
 1. **Ensure all checks pass**:
+
    ```bash
    pixi run build
    pixi run test
@@ -210,6 +216,7 @@ pixi run test
 ## Recognition
 
 Contributors are recognized in:
+
 - README.md contributors section
 - Release notes
 - GitHub contributors page

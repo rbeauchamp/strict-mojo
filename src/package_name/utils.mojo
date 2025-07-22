@@ -26,7 +26,7 @@ struct Timer:
     var _start_time: Int
     var _is_running: Bool
 
-    fn __init__(inoutself):
+    fn __init__(out self: Timer):
         """Initialize a new Timer instance.
 
         The timer starts in a stopped state.
@@ -34,16 +34,23 @@ struct Timer:
         self._start_time = 0
         self._is_running = False
 
-    fn start(inoutself):
+    fn __del__(owned self: Timer):
+        """Destructor for Timer instance.
+
+        Cleans up any resources used by the timer.
+        """
+        pass
+
+    fn start(mut self: Timer):
         """Start the timer.
 
         Records the current time as the start point.
         If the timer is already running, this resets the start time.
         """
-        self._start_time = int(perf_counter_ns())
+        self._start_time = Int(perf_counter_ns())
         self._is_running = True
 
-    fn stop(inoutself) -> Int:
+    fn stop(mut self: Timer) -> Int:
         """Stop the timer and return elapsed time.
 
         Returns:
@@ -53,11 +60,11 @@ struct Timer:
         if not self._is_running:
             return 0
 
-        var elapsed = int(perf_counter_ns()) - self._start_time
+        var elapsed = Int(perf_counter_ns()) - self._start_time
         self._is_running = False
         return elapsed
 
-    fn is_running(self) -> Bool:
+    fn is_running(self: Timer) -> Bool:
         """Check if the timer is currently running.
 
         Returns:
@@ -79,7 +86,7 @@ fn format_duration(nanoseconds: Int) -> String:
         >>> format_duration(1500000000)
         "1.50 seconds"
         >>> format_duration(2500000)
-        "2.50 milliseconds"
+        "2.50 milliseconds".
     """
     var ns = nanoseconds
 
@@ -87,14 +94,25 @@ fn format_duration(nanoseconds: Int) -> String:
     if ns >= 1_000_000_000:  # >= 1 second
         var seconds = ns // 1_000_000_000
         var fraction = (ns % 1_000_000_000) // 10_000_000  # 2 decimal places
-        return str(seconds) + "." + str(fraction).zfill(2) + " seconds"
+        if fraction < 10:
+            return String(seconds) + ".0" + String(fraction) + " seconds"
+        return String(seconds) + "." + String(fraction) + " seconds"
     elif ns >= 1_000_000:  # >= 1 millisecond
         var millis = ns // 1_000_000
         var fraction = (ns % 1_000_000) // 10_000  # 2 decimal places
-        return str(millis) + "." + str(fraction).zfill(2) + " milliseconds"
+        if fraction < 10:
+            return String(millis) + ".0" + String(fraction) + " milliseconds"
+        return String(millis) + "." + String(fraction) + " milliseconds"
     elif ns >= 1_000:  # >= 1 microsecond
         var micros = ns // 1_000
         var fraction = ns % 1_000
-        return str(micros) + "." + str(fraction).zfill(3) + " microseconds"
+        var f_str: String
+        if fraction < 10:
+            f_str = "00" + String(fraction)
+        elif fraction < 100:
+            f_str = "0" + String(fraction)
+        else:
+            f_str = String(fraction)
+        return String(micros) + "." + f_str + " microseconds"
     else:
-        return str(ns) + " nanoseconds"
+        return String(ns) + " nanoseconds"

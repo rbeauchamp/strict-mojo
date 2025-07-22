@@ -10,24 +10,30 @@ run_mojo_strict() {
     local output
     local status
     
-    # Use pixi run to ensure mojo is available
+    # Temporarily disable strict error handling for command capture
+    set +e
     output=$(pixi run mojo "$@" 2>&1)
     status=$?
+    set -e
 
     # Always display the output first
     echo "$output"
 
     # Fail on ANY diagnostic category that indicates potential issues
-    if grep -E -q 'warning:|note:|deprecated:|DEPRECATED' <<< "$output"; then
+    if grep -E -q 'error:|warning:|note:|deprecated:|DEPRECATED' <<< "$output"; then
         echo ""
         echo "❌ ERROR: Compilation aborted due to diagnostics treated as errors"
         echo ""
         
         # Count each type for detailed reporting
+        error_count=$(grep -c "error:" <<< "$output" || true)
         warning_count=$(grep -c "warning:" <<< "$output" || true)
         note_count=$(grep -c "note:" <<< "$output" || true)
         deprecated_count=$(grep -ci "deprecated" <<< "$output" || true)
         
+        if [ $error_count -gt 0 ]; then
+            echo "   - $error_count error(s) found"
+        fi
         if [ $warning_count -gt 0 ]; then
             echo "   - $warning_count warning(s) found"
         fi
@@ -39,7 +45,7 @@ run_mojo_strict() {
         fi
         
         echo ""
-        echo "   Fix ALL issues above. Zero tolerance for warnings."
+        echo "   Fix ALL issues above. Zero tolerance for errors, warnings, and notes."
         exit 1
     fi
 
@@ -51,22 +57,36 @@ run_mojo_strict() {
     fi
 }
 
+# Function to format specific files
+format_files() {
+    local files=("$@")
+    if [ ${#files[@]} -eq 0 ]; then
+        echo "🎨 Formatting all code..."
+        pixi run mojo format --quiet .
+    else
+        echo "🎨 Formatting specified files..."
+        for file in "${files[@]}"; do
+            if [ -f "$file" ]; then
+                echo "   Formatting: $file"
+                pixi run mojo format --quiet "$file"
+            fi
+        done
+    fi
+}
+
 # Handle commands
 command="$1"
 shift  # Remove command from arguments
 
 case "$command" in
     "build")
-        echo "🎨 Formatting code..."
-        pixi run mojo format --quiet .
-        
-        echo "🔨 Building with strict checks and thread sanitizer..."
-        
         # Create build directory if it doesn't exist
         mkdir -p build
         
         # Check if no arguments provided - build everything
         if [ $# -eq 0 ]; then
+            format_files  # Format all files when building entire project
+            echo "🔨 Building with strict checks and thread sanitizer..."
             echo "   Building entire project..."
             
             # Build all executables from bin/
@@ -101,6 +121,22 @@ case "$command" in
             
         # Check if output flag is provided, if not, use build/ directory
         elif [[ "$*" == *"-o "* ]]; then
+            # Extract source file for formatting (first non-option argument)
+            source_file=""
+            for arg in "$@"; do
+                if [[ "$arg" != -* ]] && [[ "$arg" == *.mojo ]]; then
+                    source_file="$arg"
+                    break
+                fi
+            done
+            
+            if [ -n "$source_file" ]; then
+                format_files "$source_file"
+            else
+                format_files  # Format all if we can't determine source file
+            fi
+            
+            echo "🔨 Building with strict checks and thread sanitizer..."
             # Output specified, use it as-is - let user control compilation mode
             run_mojo_strict build -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread "$@"
         else
@@ -113,6 +149,10 @@ case "$command" in
                 exit 1
             fi
             
+            # Format only the specific file being built
+            format_files "$source_file"
+            echo "🔨 Building with strict checks and thread sanitizer..."
+            
             # Determine if this is an executable or library module
             if [[ "$source_file" == bin/* ]]; then
                 # Executable file - build as executable
@@ -123,6 +163,7 @@ case "$command" in
                 # Library module - build as object file for validation
                 object_file="build/$(basename "$source_file" .mojo).o"
                 echo "   Building library module: $source_file → $object_file"
+
                 run_mojo_strict build --emit object -g --diagnose-missing-doc-strings --validate-doc-strings --max-notes-per-diagnostic 50 --sanitize thread "$source_file" -o "$object_file"
             else
                 # Unknown location - try as executable first, fallback to library
@@ -138,11 +179,6 @@ case "$command" in
         ;;
         
     "run")
-        echo "🎨 Formatting code..."
-        pixi run mojo format --quiet .
-        
-        echo "🚀 Building and running with thread sanitizer..."
-        
         # Extract source file (first argument)
         source_file="$1"
         if [ -z "$source_file" ]; then
@@ -150,6 +186,11 @@ case "$command" in
             echo "Usage: ./tasks.sh run <source.mojo>"
             exit 1
         fi
+        
+        # Format only the specific file being run
+        format_files "$source_file"
+        
+        echo "🚀 Building and running with thread sanitizer..."
         
         # Create build directory if it doesn't exist
         mkdir -p build
@@ -165,14 +206,14 @@ case "$command" in
         ;;
         
     "test")
-        echo "🎨 Formatting code..."
-        pixi run mojo format --quiet .
-        
-        echo "🧪 Testing with strict compilation checks..."
-        
         # If specific test file provided, validate it as a library module first
         if [[ "$1" == *.mojo ]]; then
             test_file="$1"
+            
+            # Format only the specific test file
+            format_files "$test_file"
+            
+            echo "🧪 Testing with strict compilation checks..."
             echo "   Validating test file as library module: $test_file"
             
             # Validate documentation and syntax by building as object file
@@ -183,6 +224,10 @@ case "$command" in
             echo "   Running tests: $test_file"
             run_mojo_strict test -g --diagnose-missing-doc-strings --validate-doc-strings --sanitize thread "$test_file"
         else
+            # Run all tests (directory or pattern) - format all test files
+            format_files  # Format all files when running full test suite
+            
+            echo "🧪 Testing with strict compilation checks..."
             # Run all tests (directory or pattern)
             echo "   Running test suite: $*"
             run_mojo_strict test -g --diagnose-missing-doc-strings --validate-doc-strings --sanitize thread "$@"

@@ -1,0 +1,51 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Test and Build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Setup pixi
+      uses: prefix-dev/setup-pixi@v0.8.1
+      with:
+        pixi-version: latest
+        cache: true
+    
+    - name: Install dependencies
+      run: pixi install
+    
+    - name: Check code formatting
+      run: pixi run format-check
+    
+    - name: Build project
+      run: pixi run build
+    
+    - name: Run tests
+      run: pixi run test
+    
+    - name: Build examples
+      run: |
+        pixi run build examples/basic_usage.mojo -o build/basic_usage
+        pixi run build benchmarks/core_performance.mojo -o build/benchmark
+    
+    - name: Run examples
+      run: |
+        ./build/basic_usage
+        ./build/benchmark
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: mojo-binaries
+        path: build/
+        retention-days: 7

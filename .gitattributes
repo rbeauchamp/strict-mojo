@@ -1,2 +1,60 @@
-# SCM syntax highlighting & preventing 3-way merges
-pixi.lock merge=binary linguist-language=YAML linguist-generated=true
+# Git attributes for Mojo projects
+
+# Mojo source files
+*.mojo text eol=lf diff=mojo
+*.🔥 text eol=lf diff=mojo
+
+# Documentation
+*.md text eol=lf
+*.txt text eol=lf
+*.rst text eol=lf
+
+# Configuration files
+*.toml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+
+# Shell scripts
+*.sh text eol=lf
+
+# Python files (for interop)
+*.py text eol=lf diff=python
+
+# Binary files
+*.mojopkg binary
+*.o binary
+*.so binary
+*.dylib binary
+*.dll binary
+*.exe binary
+
+# Archives
+*.zip binary
+*.tar binary
+*.gz binary
+*.bz2 binary
+*.xz binary
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text
+
+# Generated files - export-ignore
+build/ export-ignore
+.pixi/ export-ignore
+.mojo/ export-ignore
+*.dSYM/ export-ignore
+
+# Git attributes for linguist
+*.mojo linguist-language=Mojo
+*.🔥 linguist-language=Mojo
+docs/ linguist-documentation
+examples/ linguist-documentation
+test/ linguist-generated=false
+benchmarks/ linguist-generated=false

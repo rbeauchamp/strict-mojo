@@ -117,6 +117,7 @@ pixi run build bin/hello.mojo -o build/my_app
 ```
 
 **Note**: The build system automatically:
+
 - Formats code before building
 - Adds import paths for cross-directory imports
 - Detects file types (executable vs library module)
@@ -172,7 +173,7 @@ fn calculate_area(width: Float64, height: Float64) -> Float64:
         
     Examples:
         >>> calculate_area(5.0, 3.0)
-        15.0
+        15.0.
     """
     return width * height
 ```
@@ -195,26 +196,44 @@ fn good_example():
 
 ### 3. **Modern Mojo Syntax**
 
-Use current Mojo conventions:
+Use current Mojo conventions as demonstrated in the template's Timer struct:
 
 ```mojo
-struct MyStruct:
-    fn __init__(out self: MyStruct):  # Constructors use 'out self'
-        pass
+from time import perf_counter_ns
+
+struct Timer:
+    """A simple timer utility for measuring execution time."""
     
-    fn mutate(mut self: MyStruct):    # Mutating methods use 'mut self'
-        pass
+    var _start_time: Int
+    var _is_running: Bool
     
-    fn read(self: MyStruct) -> Int:   # Read-only methods use 'self'
-        return 42
+    fn __init__(out self: Timer):  # Constructors use 'out self'
+        """Initialize a new Timer instance."""
+        self._start_time = 0
+        self._is_running = False
+    
+    fn start(mut self: Timer):    # Mutating methods use 'mut self'
+        """Start the timer."""
+        self._start_time = Int(perf_counter_ns())
+        self._is_running = True
+    
+    fn is_running(self: Timer) -> Bool:   # Read-only methods use 'self'
+        """Check if the timer is currently running.
+        
+        Returns:
+            True if the timer is running, False otherwise.
+        """
+        return self._is_running
 ```
+
+See `src/package_name/utils.mojo` for the complete Timer implementation.
 
 ### 4. **Comprehensive Testing**
 
 Every public function must have tests:
 
 ```mojo
-fn test_calculate_area():
+fn test_calculate_area() raises:
     """Test area calculation with various inputs."""
     assert_equal(calculate_area(5.0, 3.0), 15.0)
     assert_equal(calculate_area(0.0, 10.0), 0.0)
@@ -224,6 +243,7 @@ fn test_calculate_area():
 ### 5. **Runtime Safety**
 
 All builds include:
+
 - Thread sanitizer for concurrency bugs
 - Debug assertions for runtime checks  
 - Maximum diagnostic output for debugging
@@ -250,6 +270,7 @@ pixi install
 ### AI Assistant Configuration
 
 This template includes configuration files for AI coding assistants:
+
 - **CLAUDE.md** - Instructions for Claude (claude.ai)
 - **GEMINI.md** - Instructions for Gemini
 
